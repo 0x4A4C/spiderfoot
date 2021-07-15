@@ -247,6 +247,17 @@ class sfp_dnsbrute(SpiderFootPlugin):
         Returns:
             boolean: whether the record is valid
         """
+
+        # if we haven't seen the host before
+        if host not in self.state["valid_hosts"]:
+            # if it's a wildcard
+            if self.isWildcard(host, ips):
+                self.sf.debug(f"Invalid host (wildcard): {host}")
+                return False
+        else:
+            self.sf.debug(f"Already processed host: {host}")
+            return False
+
         # make double-sure that this host actually exists
         ips_google = self.resolve(host, nameserver="8.8.8.8")[1]
         ips_cloudflare = self.resolve(host, nameserver="1.1.1.1")[1]
@@ -254,18 +265,7 @@ class sfp_dnsbrute(SpiderFootPlugin):
             self.sf.debug(f"Incorrectly-reported subdomain {host} does not exist.")
             return False
 
-        # if we haven't seen the host before
-        if host not in self.state["valid_hosts"]:
-            # and it isn't a wildcard
-            if not self.isWildcard(host, ips):
-                # then we're good
-                return True
-            else:
-                self.sf.debug(f"Invalid wildcard host: {host}")
-        else:
-            self.sf.debug(f"Already processed host: {host}")
-
-        return False
+        return True
 
     def sendEvent(self, source, host, ips, method=None):
         if method is None:
