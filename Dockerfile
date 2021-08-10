@@ -56,16 +56,6 @@ ENV SPIDERFOOT_LOGS /home/spiderfoot/log
 # Place database and configs outside installation directory
 ENV SPIDERFOOT_DATA /var/lib/spiderfoot
 
-# massdns
-RUN apk --update --no-cache --virtual .build-deps add git build-base go \
-   && git clone --depth=1 https://github.com/blechschmidt/massdns.git \
-   && cd massdns && make && make install
-ENV GOPATH /go
-ENV PATH="$GOPATH/bin:$PATH"
-RUN mkdir -p "$GOPATH/src" "$GOPATH/bin"
-RUN GO111MODULE=on go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns
-RUN apk del .build-deps
-
 # Run everything as one command so that only one layer is created
 RUN apk --update --no-cache add python3 musl openssl libxslt tinyxml libxml2 jpeg zlib openjpeg \
     && addgroup spiderfoot \
@@ -80,8 +70,6 @@ RUN apk --update --no-cache add python3 musl openssl libxslt tinyxml libxml2 jpe
     && chown spiderfoot:spiderfoot $SPIDERFOOT_DATA
 
 COPY . .
-RUN chown -R spiderfoot:spiderfoot /home/spiderfoot
-RUN chown -R spiderfoot:spiderfoot "$GOPATH"
 COPY --from=build /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
