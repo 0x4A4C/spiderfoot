@@ -1,8 +1,8 @@
 import logging
 import queue
 import threading
-from time import sleep
 from contextlib import suppress
+from time import sleep
 
 
 class SpiderFootPlugin():
