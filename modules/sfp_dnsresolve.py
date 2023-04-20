@@ -37,6 +37,7 @@ class sfp_dnsresolve(SpiderFootPlugin):
         'netblocklookup': True,
         'maxnetblock': 24,
         'maxv6netblock': 120,
+        "_maxthreads": 20
     }
 
     # Option descriptions
@@ -45,13 +46,13 @@ class sfp_dnsresolve(SpiderFootPlugin):
         'validatereverse': "Validate that reverse-resolved hostnames still resolve back to that IP before considering them as aliases of your target.",
         'netblocklookup': "Look up all IPs on netblocks deemed to be owned by your target for possible hosts on the same target subdomain/domain?",
         'maxnetblock': "Maximum owned IPv4 netblock size to look up all IPs within (CIDR value, 24 = /24, 16 = /16, etc.)",
-        'maxv6netblock': "Maximum owned IPv6 netblock size to look up all IPs within (CIDR value, 24 = /24, 16 = /16, etc.)"
+        'maxv6netblock': "Maximum owned IPv6 netblock size to look up all IPs within (CIDR value, 24 = /24, 16 = /16, etc.)",
+        "_maxthreads": "Maximum threads"
     }
 
     events = None
     domresults = None
     hostresults = None
-    maxThreads = 20
 
     def setup(self, sfc, userOpts=dict()):
         self.sf = sfc
