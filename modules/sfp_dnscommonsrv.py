@@ -27,9 +27,13 @@ class sfp_dnscommonsrv(SpiderFootPlugin):
         'categories': ["DNS"]
     }
 
-    opts = {}
+    optdescs = {
+        "_maxthreads": 20
+    }
 
-    optdescs = {}
+    optdescs = {
+        "_maxthreads": "Maximum threads"
+    }
 
     events = None
 
@@ -73,8 +77,6 @@ class sfp_dnscommonsrv(SpiderFootPlugin):
         '_xmpp-client._tcp',
         '_xmpp-server._tcp'
     ]
-
-    maxThreads = 50
 
     def setup(self, sfc, userOpts=dict()):
         self.sf = sfc
